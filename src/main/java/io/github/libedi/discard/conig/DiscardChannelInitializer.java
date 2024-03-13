@@ -9,7 +9,7 @@ import io.netty.channel.socket.SocketChannel;
  * 
  * - 채널의 요청을 처리하는 파이프라인을 구성하기 위한 ChannelHandler
  * - 보통은 new 로 ChannelHandler를 생성하여 추가하고,
- * - @Sharable 애노테이션이 선언된 ChannelHandler만 bean으로 받아 추가한다.
+ * - {@link Sharable @Sharable} 애노테이션이 선언된 ChannelHandler만 bean으로 받아 추가한다.
  *
  * @author libed
  *
@@ -18,6 +18,11 @@ public class DiscardChannelInitializer extends ChannelInitializer<SocketChannel>
 
     private final ChannelHandler sharableChannelHandler;
 
+    /**
+     * DiscardChannelInitializer
+     *
+     * @param sharableChannelHandler {@link Sharable @Sharable} 애노테이션이 붙은 공유 채널 핸들러 빈
+     */
     DiscardChannelInitializer(final ChannelHandler sharableChannelHandler) {
         this.sharableChannelHandler = sharableChannelHandler;
     }
