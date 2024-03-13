@@ -6,6 +6,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.CharsetUtil;
+import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -34,8 +36,16 @@ public class DiscardServerHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelRead(final ChannelHandlerContext ctx, final Object msg) throws Exception {
-        ((ByteBuf) msg).release();
-        log.info("Discard Data");
+        final ByteBuf in = (ByteBuf) msg;
+        try {
+            log.info(in.toString(CharsetUtil.UTF_8));
+//            while (in.isReadable()) {
+//                System.out.print((char) in.readByte());
+//                System.out.flush();
+//            }
+        } finally {
+            ReferenceCountUtil.release(msg);
+        }
     }
 
     @Override
