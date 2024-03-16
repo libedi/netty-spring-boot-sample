@@ -1,11 +1,11 @@
-package io.github.libedi.discard.conig;
+package io.github.libedi.echo.server.handler;
 
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 
 /**
- * DiscardChannelInitializer
+ * EchoChannelInitializer
  * 
  * - 채널의 요청을 처리하는 파이프라인을 구성하기 위한 ChannelHandler
  * - 보통은 new 로 ChannelHandler를 생성하여 추가하고,
@@ -14,16 +14,16 @@ import io.netty.channel.socket.SocketChannel;
  * @author libed
  *
  */
-public class DiscardChannelInitializer extends ChannelInitializer<SocketChannel> {
+public class EchoServerChannelInitializer extends ChannelInitializer<SocketChannel> {
 
     private final ChannelHandler sharableChannelHandler;
 
     /**
-     * DiscardChannelInitializer
+     * EchoChannelInitializer
      *
      * @param sharableChannelHandler {@link Sharable @Sharable} 애노테이션이 붙은 공유 채널 핸들러 빈
      */
-    DiscardChannelInitializer(final ChannelHandler sharableChannelHandler) {
+    public EchoServerChannelInitializer(final ChannelHandler sharableChannelHandler) {
         this.sharableChannelHandler = sharableChannelHandler;
     }
 

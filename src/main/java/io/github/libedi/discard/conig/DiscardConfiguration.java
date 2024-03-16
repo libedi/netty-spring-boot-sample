@@ -3,6 +3,7 @@ package io.github.libedi.discard.conig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import io.github.libedi.discard.handler.DiscardChannelInitializer;
 import io.github.libedi.discard.handler.DiscardServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelOption;

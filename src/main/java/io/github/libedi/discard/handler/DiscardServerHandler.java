@@ -50,7 +50,7 @@ public class DiscardServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
-        cause.printStackTrace();
+        log.error(cause.getMessage(), cause);
         ctx.close();
     }
 

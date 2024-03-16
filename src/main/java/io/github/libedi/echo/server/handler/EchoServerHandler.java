@@ -1,4 +1,4 @@
-package io.github.libedi.echo.handler;
+package io.github.libedi.echo.server.handler;
 
 import org.springframework.stereotype.Component;
 
@@ -15,8 +15,8 @@ import lombok.extern.slf4j.Slf4j;
  * @author libed
  *
  */
-@Sharable
 @Component
+@Sharable
 @Slf4j
 public class EchoServerHandler extends ChannelInboundHandlerAdapter {
 
@@ -33,12 +33,21 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelRead(final ChannelHandlerContext ctx, final Object msg) throws Exception {
-        ctx.writeAndFlush(msg);
+        ctx.write(msg);
     }
+    
+    
+
+    @Override
+    public void channelReadComplete(final ChannelHandlerContext ctx) throws Exception {
+        ctx.flush();
+    }
+
+
 
     @Override
     public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
-        cause.printStackTrace();
+        log.error(cause.getMessage(), cause);
         ctx.close();
     }
 
