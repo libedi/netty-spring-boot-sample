@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "netty.active-server",
+    "type": "io.github.libedi.properties.ActiveServer",
+    "description": "A description for 'netty.active-server'"
+  },
+  {
+    "name": "netty.port",
+    "type": "int",
+    "description": "A description for 'netty.port'"
+  }
+]}

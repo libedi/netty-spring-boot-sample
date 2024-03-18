@@ -2,3 +2,8 @@ logging:
   level:
     '[org.springframework]': debug
     '[io.github.libedi]': debug
+    
+netty:
+  active-server:
+    echo
+  port: 18080
