@@ -48,8 +48,8 @@ public class ServerFactoryBean implements FactoryBean<Server>, InitializingBean 
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        final int port = properties.getPort();
-        switch (properties.getActiveServer()) {
+        final int port = properties.port();
+        switch (properties.activeServer()) {
         case DISCARD:
             server = new DiscardServer(discardServerBootstrap, port);
             break;
