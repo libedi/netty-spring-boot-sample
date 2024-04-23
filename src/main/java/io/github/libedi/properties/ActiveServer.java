@@ -7,5 +7,5 @@ package io.github.libedi.properties;
  *
  */
 public enum ActiveServer {
-    DISCARD, ECHO
+	DISCARD, ECHO, TIME, MOCK
 }

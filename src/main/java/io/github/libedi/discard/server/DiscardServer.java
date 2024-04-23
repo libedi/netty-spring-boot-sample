@@ -2,10 +2,6 @@ package io.github.libedi.discard.server;
 
 import io.github.libedi.Server;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import jakarta.annotation.PreDestroy;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * DiscardServer
@@ -13,38 +9,15 @@ import lombok.extern.slf4j.Slf4j;
  * @author libed
  *
  */
-@Slf4j
-public class DiscardServer implements Server {
-
-    private final ServerBootstrap serverBootstrap;
-    private final int             port;
-
-    private Channel serverChannel;
+public class DiscardServer extends Server {
 
     public DiscardServer(final ServerBootstrap serverBootstrap, final int port) {
-        this.serverBootstrap = serverBootstrap;
-        this.port = port;
+		super(serverBootstrap, port);
     }
 
-    @Override
-    public void run() {
-        try {
-            final ChannelFuture serverChannelFuture = serverBootstrap.bind("127.0.0.1", port).sync();
-            serverChannel = serverChannelFuture.channel().closeFuture().sync().channel();
-        } catch (final InterruptedException e) {
-            close();
-        }
-        log.warn("Exit Program.");
-    }
-
-    @PreDestroy
-    @Override
-    public void close() {
-        if (serverChannel != null) {
-            serverChannel.close();
-            serverChannel.parent().close();
-            log.info("CLOSE ServerChannel.");
-        }
-    }
+	@Override
+	protected void process(final ServerBootstrap serverBootstrap, final int port) throws Exception {
+		serverBootstrap.bind(port).sync().channel().closeFuture().sync().channel();
+	}
 
 }
