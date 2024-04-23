@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 
 @SpringBootApplication
 @ConfigurationPropertiesScan("io.github.libedi.properties")
@@ -16,9 +17,16 @@ public class NettySpringBootSampleApplication {
 		SpringApplication.run(NettySpringBootSampleApplication.class, args);
 	}
 
+	@Profile("test")
     @Bean
-    ApplicationRunner startUp(final Server server) {
+	ApplicationRunner testRunner(final Server server) {
         return args -> CompletableFuture.runAsync(() -> server.run());
     }
+
+	@Profile("!test")
+	@Bean
+	ApplicationRunner runner(final Server server) {
+		return args -> server.run();
+	}
 
 }
