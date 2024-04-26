@@ -16,22 +16,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TimeClientHandler extends ChannelInboundHandlerAdapter {
 
-	private ByteBuf buf; // 2.
+//	private ByteBuf buf; // 2.
 
 	/*
 	 * 2. ChannelHandler의 수명주기 메소드, handlerAdded()와 handlerRemoved()를 통해 초기화 작업 수행
 	 * 가능
 	 */
-	@Override
-	public void handlerAdded(final ChannelHandlerContext ctx) throws Exception {
-		buf = ctx.alloc().buffer(4);
-	}
-
-	@Override
-	public void handlerRemoved(final ChannelHandlerContext ctx) throws Exception {
-		buf.release();
-		buf = null;
-	}
+//	@Override
+//	public void handlerAdded(final ChannelHandlerContext ctx) throws Exception {
+//		buf = ctx.alloc().buffer(4);
+//	}
+//
+//	@Override
+//	public void handlerRemoved(final ChannelHandlerContext ctx) throws Exception {
+//		buf.release();
+//		buf = null;
+//	}
 
 	@Override
 	public void channelRead(final ChannelHandlerContext ctx, final Object msg) throws Exception {
@@ -44,25 +44,32 @@ public class TimeClientHandler extends ChannelInboundHandlerAdapter {
 		/*
 		 * 3. 조각화를 방지하기 이해 원하는 크기의 데이터로 수신 데이터 누적
 		 */
-		buf.writeBytes(m);
+//		buf.writeBytes(m);
+//		m.release();
+
 		// 4.
-//		try {
-//			final long currentTimeMills = (m.readUnsignedInt() - 2208988800L) * 1000L;
-//			log.debug("{}", new Date(currentTimeMills));
-//			ctx.close();
-//		} finally {
-//			m.release();
-//		}
-		m.release();
+		try {
+			final long currentTimeMills = (m.readUnsignedInt() - 2208988800L) * 1000L;
+			log.debug("{}", new Date(currentTimeMills));
+			ctx.close();
+		} finally {
+			m.release();
+		}
 
 		/*
 		 * 4. 충분한 데이터가 있는지 확인하고 비즈니스 로직 수행
 		 */
-		if (buf.readableBytes() >= 4) {
-			final long currentTimeMills = (m.readUnsignedInt() - 2208988800L) * 1000L;
-			log.debug("{}", new Date(currentTimeMills));
-			ctx.close();
-		}
+//		if (buf.readableBytes() >= 4) {
+//			final long currentTimeMills = (m.readUnsignedInt() - 2208988800L) * 1000L;
+//			log.debug("{}", new Date(currentTimeMills));
+//			ctx.close();
+//		}
+
+		/*
+		 * 5. 하지만 코드가 깔끔하지 못하고, 가변 길이 같은 복잡한 프로토콜 사용시 이 핸들러는 매우 빠르게 유지보수가 어려워질 것이다. 따라서
+		 * ChannelPipeline 에 하나 이상의 모듈로 분리하여 복잡성을 줄여보자. ==> TImeClientDecoder
+		 */
+		// 6. TimeClientDecoder에 패킷 단편화 처리를 위임하고, 위 코드들은 비즈니스 코드만 남기고 원복
 	}
 
 	@Override
