@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
- * Message
+ * MockMessage
  *
  * @author libed
  *
@@ -18,7 +18,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class Message implements Convertible {
+public class MockMessage implements Convertible {
 
 	private final Header header;
 	private final Body body;
@@ -33,8 +33,8 @@ public class Message implements Convertible {
 		return ByteBufUtil.createByteBuf(getDataLength(), header, body);
 	}
 
-	public static Message from(final ByteBuf buf) {
+	public static MockMessage from(final ByteBuf buf) {
 		final Header header = Header.from(buf);
-		return new Message(header, Body.from(header, buf));
+		return new MockMessage(header, Body.from(header, buf));
 	}
 }
