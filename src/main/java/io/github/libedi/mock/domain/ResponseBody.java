@@ -35,7 +35,7 @@ public sealed class ResponseBody implements Body permits SendResponseBody {
 		return ByteBufUtil.createByteBuf(getDataLength(), result);
 	}
 
-	public static ResponseBody from(final ByteBuf buf) {
+	static ResponseBody from(final ByteBuf buf) {
 		return ResponseBody.builder()
 				.result(Result.from(buf.readInt()))
 				.build();

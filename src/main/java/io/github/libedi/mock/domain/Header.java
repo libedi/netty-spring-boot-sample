@@ -46,7 +46,7 @@ public final class Header implements Convertible {
 				reserved);
 	}
 
-	public static Header from(final ByteBuf buf) {
+	static Header from(final ByteBuf buf) {
 		return Header.builder()
 				.messageType(MessageType.from(buf.readShort()))
 				.messageSubType(MessageSubType.from(buf.readShort()))
@@ -63,27 +63,27 @@ public final class Header implements Convertible {
 				.build();
 	}
 
-	public boolean isLinkRequest() {
+	boolean isLinkRequest() {
 		return messageType == MessageType.REQ && messageSubType == MessageSubType.LINK;
 	}
 
-	public boolean isLinkResponse() {
+	boolean isLinkResponse() {
 		return messageType == MessageType.RES && messageSubType == MessageSubType.LINK;
 	}
 
-	public boolean isSendRequest() {
+	boolean isSendRequest() {
 		return messageType == MessageType.REQ && messageSubType == MessageSubType.SEND;
 	}
 
-	public boolean isSendResponse() {
+	boolean isSendResponse() {
 		return messageType == MessageType.RES && messageSubType == MessageSubType.SEND;
 	}
 
-	public boolean isResultRequest() {
+	boolean isResultRequest() {
 		return messageType == MessageType.REQ && messageSubType == MessageSubType.RESULT;
 	}
 
-	public boolean isResultResponse() {
+	boolean isResultResponse() {
 		return messageType == MessageType.RES && messageSubType == MessageSubType.RESULT;
 	}
 

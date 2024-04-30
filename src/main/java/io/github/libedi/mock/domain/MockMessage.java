@@ -46,4 +46,28 @@ public class MockMessage implements Convertible {
 		return Header.LENGTH + buf.getInt(44);
 	}
 
+	public boolean isLinkRequest() {
+		return header.isLinkRequest();
+	}
+
+	public boolean isLinkResponse() {
+		return header.isLinkResponse();
+	}
+
+	public boolean isSendRequest() {
+		return header.isSendRequest();
+	}
+
+	public boolean isSendResponse() {
+		return header.isSendResponse();
+	}
+
+	public boolean isResultRequest() {
+		return header.isResultRequest();
+	}
+
+	public boolean isResultResponse() {
+		return header.isResultResponse();
+	}
+
 }

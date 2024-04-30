@@ -16,23 +16,24 @@ import io.github.libedi.mock.domain.Body;
 import io.github.libedi.mock.domain.Header;
 import io.github.libedi.mock.domain.MockMessage;
 import io.github.libedi.mock.domain.SendRequestBody;
+import io.github.libedi.mock.util.DataConverter;
 import io.netty.channel.ChannelInboundHandler;
 import io.netty.channel.embedded.EmbeddedChannel;
 
 /**
- * ByteToMockMessageDecoderTest
+ * SendRequestInboundHandlerTest
  *
  * @author libed
  *
  */
-class ByteToMockMessageDecoderTest {
+public class SendRequestInboundHandlerTest {
 
 	private ChannelInboundHandler inboundHandler;
 	private EmbeddedChannel channel;
 
 	@BeforeEach
 	void init() {
-		inboundHandler = new ByteToMockMessageDecoder();
+		inboundHandler = new SendRequestInboundHandler();
 		channel = new EmbeddedChannel(inboundHandler) {
 			@Override
 			protected SocketAddress localAddress0() {
@@ -42,19 +43,34 @@ class ByteToMockMessageDecoderTest {
 		assertThat(inboundHandler).isNotNull();
 		assertThat(channel).isNotNull();
 	}
-
+	
 	@Test
 	void test() {
 		// given
-		final MockMessage expected = createSendRequest();
-		channel.writeInbound(expected.toByteBuf());
+		final MockMessage request = createSendRequest();
+		final MockMessage expectedSendResponse = DataConverter.convertMessage(request);
+		channel.writeInbound(request);
+		
+		// when
+		final MockMessage actualSendResponse = channel.readOutbound();
+		
+		// then
+		assertThat(actualSendResponse).isNotNull();
+		assertThat(actualSendResponse.isSendResponse()).isTrue();
+		assertThat(actualSendResponse).usingRecursiveComparison().ignoringFields("body.msgId", "body.sendStatus")
+				.isEqualTo(expectedSendResponse);
+
+		// given
+		final MockMessage expectedResultRequest = DataConverter.convertMessage(actualSendResponse);
 
 		// when
-		final MockMessage actual = channel.readInbound();
+		final MockMessage actualResultRequest = channel.readOutbound();
 
 		// then
-		assertThat(actual).isNotNull();
-		assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+		assertThat(actualResultRequest).isNotNull();
+		assertThat(actualResultRequest.isResultRequest()).isTrue();
+		assertThat(actualResultRequest).usingRecursiveComparison().ignoringFields("body.sendStatus")
+				.isEqualTo(expectedResultRequest);
 	}
 
 	private MockMessage createSendRequest() {
