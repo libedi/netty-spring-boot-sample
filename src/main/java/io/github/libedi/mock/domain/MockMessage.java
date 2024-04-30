@@ -37,4 +37,13 @@ public class MockMessage implements Convertible {
 		final Header header = Header.from(buf);
 		return new MockMessage(header, Body.from(header, buf));
 	}
+
+	public static MockMessage of(final Header header, final Body body) {
+		return new MockMessage(header, body);
+	}
+
+	public static int getTotalLength(final ByteBuf buf) {
+		return Header.LENGTH + buf.getInt(44);
+	}
+
 }

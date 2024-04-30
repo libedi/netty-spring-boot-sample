@@ -26,7 +26,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 public final class Header implements Convertible {
 
-	private static final int LENGTH = 58;
+	static final int LENGTH = 58;
 
 	private MessageType messageType; // 2 bytes
 	private MessageSubType messageSubType; // 2 bytes
@@ -42,7 +42,8 @@ public final class Header implements Convertible {
 
 	@Override
 	public ByteBuf toByteBuf() {
-		return ByteBufUtil.createByteBuf(getDataLength(), messageType, messageSubType, source, destination);
+		return ByteBufUtil.createByteBuf(getDataLength(), messageType, messageSubType, source, destination, bodyLength,
+				reserved);
 	}
 
 	public static Header from(final ByteBuf buf) {
