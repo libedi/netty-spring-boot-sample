@@ -18,7 +18,7 @@ public sealed interface Body extends Convertible permits SendRequestBody, Result
 	 * @return
 	 */
 	static Body from(final Header header, final ByteBuf buf) {
-		if (header == null || buf == null || !buf.isReadable()) {
+		if (header == null || buf == null || header.getBodyLength() == 0 || !buf.isReadable()) {
 			return null;
 		}
 		if (header.isSendRequest()) {
