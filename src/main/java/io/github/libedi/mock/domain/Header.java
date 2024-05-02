@@ -26,7 +26,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 public final class Header implements Convertible {
 
-	static final int LENGTH = 58;
+	public static final int LENGTH = 58;
 
 	private MessageType messageType; // 2 bytes
 	private MessageSubType messageSubType; // 2 bytes
