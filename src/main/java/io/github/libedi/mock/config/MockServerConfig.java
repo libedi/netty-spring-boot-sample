@@ -36,6 +36,16 @@ class MockServerConfig {
 		return new MockServerChannelInitializer(eventExecutorGroup());
 	}
 	
+	@Bean
+	ServerBootstrap serverBootstrap(final EventLoopGroup bossGroup, final EventLoopGroup workerGroup,
+			final ServerBootstrapCustomizer customizer) {
+		final ServerBootstrap serverBootstrap = new ServerBootstrap()
+				.group(bossGroup, workerGroup)
+				.childHandler(channelInitializer());
+		customizer.customize(serverBootstrap);
+		return serverBootstrap;
+	}
+
 	@Profile({ "default", "local", "test" })
 	@Configuration
 	static class LocalConfig {
@@ -51,11 +61,9 @@ class MockServerConfig {
 		}
 		
 		@Bean
-		ServerBootstrap serverBootstrap(final ChannelInitializer<SocketChannel> channelInitializer) {
-			return new ServerBootstrap()
-					.group(bossGroup(), workerGroup())
+		ServerBootstrapCustomizer customizer() {
+			return serverBootstrap -> serverBootstrap
 					.channel(NioServerSocketChannel.class)
-					.childHandler(channelInitializer)
 					.childOption(ChannelOption.SO_BACKLOG, 128)
 					.childOption(ChannelOption.SO_KEEPALIVE, true);
 		}
@@ -76,14 +84,16 @@ class MockServerConfig {
 		}
 		
 		@Bean
-		ServerBootstrap serverBootstrap(final ChannelInitializer<SocketChannel> channelInitializer) {
-			return new ServerBootstrap()
-					.group(bossGroup(), workerGroup())
+		ServerBootstrapCustomizer customizer() {
+			return serverBootstrap -> serverBootstrap
 					.channel(EpollServerSocketChannel.class)
-					.childHandler(channelInitializer)
-					.childOption(ChannelOption.SO_BACKLOG, 128)
+					.childOption(ChannelOption.SO_BACKLOG, 512)
 					.childOption(ChannelOption.SO_KEEPALIVE, true);
 		}
 	}
 	
+	interface ServerBootstrapCustomizer {
+		void customize(ServerBootstrap serverBootstrap);
+	}
+
 }
