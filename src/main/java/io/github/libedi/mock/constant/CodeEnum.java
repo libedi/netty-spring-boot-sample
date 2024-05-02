@@ -9,6 +9,6 @@ package io.github.libedi.mock.constant;
  */
 public interface CodeEnum<T> {
 
-	T getCode();
+    T getCode();
 
 }

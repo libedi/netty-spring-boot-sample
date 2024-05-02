@@ -25,75 +25,75 @@ import io.netty.util.concurrent.EventExecutorGroup;
  */
 @Configuration
 class MockServerConfig {
-	
-	@Bean(destroyMethod = "shutdownGracefully")
-	EventExecutorGroup eventExecutorGroup() {
-		return new DefaultEventExecutorGroup(8);
-	}
-	
-	@Bean
-	ChannelInitializer<SocketChannel> channelInitializer() {
-		return new MockServerChannelInitializer(eventExecutorGroup());
-	}
-	
-	@Bean
-	ServerBootstrap serverBootstrap(final EventLoopGroup bossGroup, final EventLoopGroup workerGroup,
-			final ServerBootstrapCustomizer customizer) {
-		final ServerBootstrap serverBootstrap = new ServerBootstrap()
-				.group(bossGroup, workerGroup)
-				.childHandler(channelInitializer());
-		customizer.customize(serverBootstrap);
-		return serverBootstrap;
-	}
 
-	@Profile({ "default", "local", "test" })
-	@Configuration
-	static class LocalConfig {
-		
-		@Bean(destroyMethod = "shutdownGracefully")
-		EventLoopGroup bossGroup() {
-			return new NioEventLoopGroup(1);
-		}
-		
-		@Bean(destroyMethod = "shutdownGracefully")
-		EventLoopGroup workerGroup() {
-			return new NioEventLoopGroup();
-		}
-		
-		@Bean
-		ServerBootstrapCustomizer customizer() {
-			return serverBootstrap -> serverBootstrap
-					.channel(NioServerSocketChannel.class)
-					.childOption(ChannelOption.SO_BACKLOG, 128)
-					.childOption(ChannelOption.SO_KEEPALIVE, true);
-		}
-	}
-	
-	@Profile({ "dev", "prod" })
-	@Configuration
-	static class ProductionConfig {
-		
-		@Bean(destroyMethod = "shutdownGracefully")
-		EventLoopGroup bossGroup() {
-			return new EpollEventLoopGroup(1);
-		}
-		
-		@Bean(destroyMethod = "shutdownGracefully")
-		EventLoopGroup workerGroup() {
-			return new EpollEventLoopGroup();
-		}
-		
-		@Bean
-		ServerBootstrapCustomizer customizer() {
-			return serverBootstrap -> serverBootstrap
-					.channel(EpollServerSocketChannel.class)
-					.childOption(ChannelOption.SO_BACKLOG, 512)
-					.childOption(ChannelOption.SO_KEEPALIVE, true);
-		}
-	}
-	
-	interface ServerBootstrapCustomizer {
-		void customize(ServerBootstrap serverBootstrap);
-	}
+    @Bean(destroyMethod = "shutdownGracefully")
+    EventExecutorGroup eventExecutorGroup() {
+        return new DefaultEventExecutorGroup(8);
+    }
+
+    @Bean
+    ChannelInitializer<SocketChannel> channelInitializer() {
+        return new MockServerChannelInitializer(eventExecutorGroup());
+    }
+
+    @Bean
+    ServerBootstrap serverBootstrap(final EventLoopGroup bossGroup, final EventLoopGroup workerGroup,
+            final ServerBootstrapCustomizer customizer) {
+        final ServerBootstrap serverBootstrap = new ServerBootstrap()
+                .group(bossGroup, workerGroup)
+                .childHandler(channelInitializer());
+        customizer.customize(serverBootstrap);
+        return serverBootstrap;
+    }
+
+    @Profile({ "default", "local", "test" })
+    @Configuration
+    static class LocalConfig {
+
+        @Bean(destroyMethod = "shutdownGracefully")
+        EventLoopGroup bossGroup() {
+            return new NioEventLoopGroup(1);
+        }
+
+        @Bean(destroyMethod = "shutdownGracefully")
+        EventLoopGroup workerGroup() {
+            return new NioEventLoopGroup();
+        }
+
+        @Bean
+        ServerBootstrapCustomizer customizer() {
+            return serverBootstrap -> serverBootstrap
+                    .channel(NioServerSocketChannel.class)
+                    .childOption(ChannelOption.SO_BACKLOG, 128)
+                    .childOption(ChannelOption.SO_KEEPALIVE, true);
+        }
+    }
+
+    @Profile({ "dev", "prod" })
+    @Configuration
+    static class ProductionConfig {
+
+        @Bean(destroyMethod = "shutdownGracefully")
+        EventLoopGroup bossGroup() {
+            return new EpollEventLoopGroup(1);
+        }
+
+        @Bean(destroyMethod = "shutdownGracefully")
+        EventLoopGroup workerGroup() {
+            return new EpollEventLoopGroup();
+        }
+
+        @Bean
+        ServerBootstrapCustomizer customizer() {
+            return serverBootstrap -> serverBootstrap
+                    .channel(EpollServerSocketChannel.class)
+                    .childOption(ChannelOption.SO_BACKLOG, 512)
+                    .childOption(ChannelOption.SO_KEEPALIVE, true);
+        }
+    }
+
+    interface ServerBootstrapCustomizer {
+        void customize(ServerBootstrap serverBootstrap);
+    }
 
 }

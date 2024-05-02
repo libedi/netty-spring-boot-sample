@@ -15,33 +15,32 @@ import lombok.Builder;
  */
 public record Address(String cid, String callNumber) implements Convertible {
 
-	private static final int LENGTH = 20;
+    private static final int LENGTH = 20;
 
-	@Builder
-	public Address {
-		Objects.requireNonNull(cid, () -> "cid must not be null.");
-		Objects.requireNonNull(callNumber, () -> "callNumber must not be null.");
-	}
+    @Builder
+    public Address {
+        Objects.requireNonNull(cid, () -> "cid must not be null.");
+        Objects.requireNonNull(callNumber, () -> "callNumber must not be null.");
+    }
 
-	@Override
-	public int getDataLength() {
-		return LENGTH;
-	}
+    @Override
+    public int getDataLength() {
+        return LENGTH;
+    }
 
-	@Override
-	public ByteBuf toByteBuf() {
-		final byte[] destCid = new byte[10];
-		Arrays.fill(destCid, (byte) 0);
-		final byte[] cidBytes = cid.getBytes();
-		System.arraycopy(cidBytes, 0, destCid, 0, cidBytes.length);
+    @Override
+    public ByteBuf toByteBuf() {
+        final byte[] destCid = new byte[10];
+        Arrays.fill(destCid, (byte) 0);
+        final byte[] cidBytes = cid.getBytes();
+        System.arraycopy(cidBytes, 0, destCid, 0, cidBytes.length);
 
-		final byte[] destCallNumber = new byte[10];
-		Arrays.fill(destCallNumber, (byte) 0);
-		final byte[] callNumberBytes = callNumber.getBytes();
-		System.arraycopy(callNumberBytes, 0, destCallNumber, 0, callNumberBytes.length);
+        final byte[] destCallNumber = new byte[10];
+        Arrays.fill(destCallNumber, (byte) 0);
+        final byte[] callNumberBytes = callNumber.getBytes();
+        System.arraycopy(callNumberBytes, 0, destCallNumber, 0, callNumberBytes.length);
 
-		return ByteBufUtil.createByteBuf(getDataLength(), destCid, destCallNumber);
-	}
+        return ByteBufUtil.createByteBuf(getDataLength(), destCid, destCallNumber);
+    }
 
 }
-

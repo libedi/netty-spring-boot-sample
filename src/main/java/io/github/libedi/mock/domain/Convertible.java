@@ -10,8 +10,8 @@ import io.netty.buffer.ByteBuf;
  */
 public interface Convertible {
 
-	int getDataLength();
+    int getDataLength();
 
-	ByteBuf toByteBuf();
+    ByteBuf toByteBuf();
 
 }

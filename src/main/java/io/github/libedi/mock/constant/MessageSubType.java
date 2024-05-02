@@ -18,21 +18,21 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum MessageSubType implements CodeEnum<Short> {
 
-	/** 연결: 1 */
-	LINK((short) 1),
-	/** 전송: 2 */
-	SEND((short) 2),
-	/** 결과: 3 */
-	RESULT((short) 3),
-	/** 잘못된 메시지 형식 */
-	INVALID(null);
+    /** 연결: 1 */
+    LINK((short) 1),
+    /** 전송: 2 */
+    SEND((short) 2),
+    /** 결과: 3 */
+    RESULT((short) 3),
+    /** 잘못된 메시지 형식 */
+    INVALID(null);
 
-	private final Short code;
+    private final Short code;
 
-	private static final Map<Short, MessageSubType> map = Arrays.stream(values())
-			.collect(Collectors.toMap(CodeEnum::getCode, Function.identity()));
+    private static final Map<Short, MessageSubType> map = Arrays.stream(values())
+            .collect(Collectors.toMap(CodeEnum::getCode, Function.identity()));
 
-	public static MessageSubType from(final short code) {
-		return map.getOrDefault(code, INVALID);
-	}
+    public static MessageSubType from(final short code) {
+        return map.getOrDefault(code, INVALID);
+    }
 }

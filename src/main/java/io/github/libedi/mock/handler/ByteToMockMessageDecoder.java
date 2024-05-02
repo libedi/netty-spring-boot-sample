@@ -18,15 +18,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ByteToMockMessageDecoder extends ByteToMessageDecoder {
 
-	@Override
-	protected void decode(final ChannelHandlerContext ctx, final ByteBuf in, final List<Object> out) throws Exception {
-		if (in.isReadable(MockMessage.getTotalLength(in))) {
-			final MockMessage message = MockMessage.from(in);
-			if (log.isDebugEnabled() && ctx.channel().localAddress() instanceof InetSocketAddress) {
-				log.debug("[PORT: {}] {}", ((InetSocketAddress) ctx.channel().localAddress()).getPort(), message);
-			}
-			out.add(message);
-		}
-	}
+    @Override
+    protected void decode(final ChannelHandlerContext ctx, final ByteBuf in, final List<Object> out) throws Exception {
+        if (in.isReadable(MockMessage.getTotalLength(in))) {
+            final MockMessage message = MockMessage.from(in);
+            if (log.isDebugEnabled() && ctx.channel().localAddress() instanceof InetSocketAddress) {
+                log.debug("[PORT: {}] {}", ((InetSocketAddress) ctx.channel().localAddress()).getPort(), message);
+            }
+            out.add(message);
+        }
+    }
 
 }

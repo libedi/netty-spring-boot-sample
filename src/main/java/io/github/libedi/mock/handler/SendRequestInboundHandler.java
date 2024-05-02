@@ -20,24 +20,23 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SendRequestInboundHandler extends SimpleChannelInboundHandler<MockMessage> {
 
-	@Override
-	protected void channelRead0(final ChannelHandlerContext ctx, final MockMessage msg) throws Exception {
-		if (msg.isSendRequest()) {
-			if (log.isDebugEnabled() && ctx.channel().localAddress() instanceof InetSocketAddress) {
-				log.debug("[PORT: {}] {}", ((InetSocketAddress) ctx.channel().localAddress()).getPort(), msg);
-			}
-			final MockMessage sendResponse = DataConverter.convertMessage(msg);
-			final ChannelFuture future = ctx.writeAndFlush(sendResponse);
-			future.addListener(f -> {
-				if (((SendResponseBody) sendResponse.getBody()).isSuccess()) {
-					Thread.sleep(Duration.ofMillis(50L));
-					ctx.writeAndFlush(DataConverter.convertMessage(sendResponse));
-				}
-			});
-		} else {
-			ctx.fireChannelRead(msg);
-		}
-	}
-
+    @Override
+    protected void channelRead0(final ChannelHandlerContext ctx, final MockMessage msg) throws Exception {
+        if (msg.isSendRequest()) {
+            if (log.isDebugEnabled() && ctx.channel().localAddress() instanceof InetSocketAddress) {
+                log.debug("[PORT: {}] {}", ((InetSocketAddress) ctx.channel().localAddress()).getPort(), msg);
+            }
+            final MockMessage   sendResponse = DataConverter.convertMessage(msg);
+            final ChannelFuture future       = ctx.writeAndFlush(sendResponse);
+            future.addListener(f -> {
+                if (((SendResponseBody) sendResponse.getBody()).isSuccess()) {
+                    Thread.sleep(Duration.ofMillis(50L));
+                    ctx.writeAndFlush(DataConverter.convertMessage(sendResponse));
+                }
+            });
+        } else {
+            ctx.fireChannelRead(msg);
+        }
+    }
 
 }

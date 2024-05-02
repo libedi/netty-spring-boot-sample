@@ -23,31 +23,31 @@ import lombok.ToString;
 @EqualsAndHashCode
 public sealed class ResponseBody implements Body permits SendResponseBody {
 
-	private final Result result;
+    private final Result result;
 
-	@Override
-	public int getDataLength() {
-		return Integer.BYTES;
-	}
+    @Override
+    public int getDataLength() {
+        return Integer.BYTES;
+    }
 
-	@Override
-	public ByteBuf toByteBuf() {
-		return ByteBufUtil.createByteBuf(getDataLength(), result);
-	}
+    @Override
+    public ByteBuf toByteBuf() {
+        return ByteBufUtil.createByteBuf(getDataLength(), result);
+    }
 
-	static ResponseBody from(final ByteBuf buf) {
-		return ResponseBody.builder()
-				.result(Result.from(buf.readInt()))
-				.build();
-	}
+    static ResponseBody from(final ByteBuf buf) {
+        return ResponseBody.builder()
+                .result(Result.from(buf.readInt()))
+                .build();
+    }
 
-	/**
-	 * 전송 결과 성공 여부
-	 *
-	 * @return
-	 */
-	public boolean isSuccess() {
-		return result == Result.SUCCESS;
-	}
+    /**
+     * 전송 결과 성공 여부
+     *
+     * @return
+     */
+    public boolean isSuccess() {
+        return result == Result.SUCCESS;
+    }
 
 }

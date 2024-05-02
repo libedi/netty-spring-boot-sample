@@ -13,9 +13,9 @@ import io.netty.handler.codec.MessageToByteEncoder;
  */
 public class MockMessageToByteEncoder extends MessageToByteEncoder<MockMessage> {
 
-	@Override
-	protected void encode(final ChannelHandlerContext ctx, final MockMessage msg, final ByteBuf out) throws Exception {
-		out.writeBytes(msg.toByteBuf());
-	}
+    @Override
+    protected void encode(final ChannelHandlerContext ctx, final MockMessage msg, final ByteBuf out) throws Exception {
+        out.writeBytes(msg.toByteBuf());
+    }
 
 }

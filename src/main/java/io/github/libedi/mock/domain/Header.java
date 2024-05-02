@@ -26,65 +26,64 @@ import lombok.ToString;
 @EqualsAndHashCode
 public final class Header implements Convertible {
 
-	public static final int LENGTH = 58;
+    public static final int LENGTH = 58;
 
-	private MessageType messageType; // 2 bytes
-	private MessageSubType messageSubType; // 2 bytes
-	private Address source; // 20 bytes
-	private Address destination; // 20 bytes
-	private int bodyLength; // 4 bytes
-	private byte[] reserved; // 10 bytes
+    private MessageType    messageType;    // 2 bytes
+    private MessageSubType messageSubType; // 2 bytes
+    private Address        source;         // 20 bytes
+    private Address        destination;    // 20 bytes
+    private int            bodyLength;     // 4 bytes
+    private byte[]         reserved;       // 10 bytes
 
-	@Override
-	public int getDataLength() {
-		return LENGTH;
-	}
+    @Override
+    public int getDataLength() {
+        return LENGTH;
+    }
 
-	@Override
-	public ByteBuf toByteBuf() {
-		return ByteBufUtil.createByteBuf(getDataLength(), messageType, messageSubType, source, destination, bodyLength,
-				reserved);
-	}
+    @Override
+    public ByteBuf toByteBuf() {
+        return ByteBufUtil.createByteBuf(getDataLength(), messageType, messageSubType, source, destination, bodyLength, reserved);
+    }
 
-	static Header from(final ByteBuf buf) {
-		return Header.builder()
-				.messageType(MessageType.from(buf.readShort()))
-				.messageSubType(MessageSubType.from(buf.readShort()))
-				.source(Address.builder()
-						.cid(ByteBufUtil.toString(buf, 10))
-						.callNumber(ByteBufUtil.toString(buf, 10))
-						.build())
-				.destination(Address.builder()
-						.cid(ByteBufUtil.toString(buf, 10))
-						.callNumber(ByteBufUtil.toString(buf, 10))
-						.build())
-				.bodyLength(buf.readInt())
-				.reserved(ByteBufUtil.readBytes(buf, 10))
-				.build();
-	}
+    static Header from(final ByteBuf buf) {
+        return Header.builder()
+                .messageType(MessageType.from(buf.readShort()))
+                .messageSubType(MessageSubType.from(buf.readShort()))
+                .source(Address.builder()
+                        .cid(ByteBufUtil.toString(buf, 10))
+                        .callNumber(ByteBufUtil.toString(buf, 10))
+                        .build())
+                .destination(Address.builder()
+                        .cid(ByteBufUtil.toString(buf, 10))
+                        .callNumber(ByteBufUtil.toString(buf, 10))
+                        .build())
+                .bodyLength(buf.readInt())
+                .reserved(ByteBufUtil.readBytes(buf, 10))
+                .build();
+    }
 
-	boolean isLinkRequest() {
-		return messageType == MessageType.REQ && messageSubType == MessageSubType.LINK;
-	}
+    boolean isLinkRequest() {
+        return messageType == MessageType.REQ && messageSubType == MessageSubType.LINK;
+    }
 
-	boolean isLinkResponse() {
-		return messageType == MessageType.RES && messageSubType == MessageSubType.LINK;
-	}
+    boolean isLinkResponse() {
+        return messageType == MessageType.RES && messageSubType == MessageSubType.LINK;
+    }
 
-	boolean isSendRequest() {
-		return messageType == MessageType.REQ && messageSubType == MessageSubType.SEND;
-	}
+    boolean isSendRequest() {
+        return messageType == MessageType.REQ && messageSubType == MessageSubType.SEND;
+    }
 
-	boolean isSendResponse() {
-		return messageType == MessageType.RES && messageSubType == MessageSubType.SEND;
-	}
+    boolean isSendResponse() {
+        return messageType == MessageType.RES && messageSubType == MessageSubType.SEND;
+    }
 
-	boolean isResultRequest() {
-		return messageType == MessageType.REQ && messageSubType == MessageSubType.RESULT;
-	}
+    boolean isResultRequest() {
+        return messageType == MessageType.REQ && messageSubType == MessageSubType.RESULT;
+    }
 
-	boolean isResultResponse() {
-		return messageType == MessageType.RES && messageSubType == MessageSubType.RESULT;
-	}
+    boolean isResultResponse() {
+        return messageType == MessageType.RES && messageSubType == MessageSubType.RESULT;
+    }
 
 }
