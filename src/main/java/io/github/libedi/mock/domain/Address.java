@@ -20,7 +20,6 @@ public record Address(String cid, String callNumber) implements Convertible {
     @Builder
     public Address {
         Objects.requireNonNull(cid, () -> "cid must not be null.");
-        Objects.requireNonNull(callNumber, () -> "callNumber must not be null.");
     }
 
     @Override
@@ -37,8 +36,10 @@ public record Address(String cid, String callNumber) implements Convertible {
 
         final byte[] destCallNumber = new byte[10];
         Arrays.fill(destCallNumber, (byte) 0);
-        final byte[] callNumberBytes = callNumber.getBytes();
-        System.arraycopy(callNumberBytes, 0, destCallNumber, 0, callNumberBytes.length);
+        if (callNumber != null) {
+            final byte[] callNumberBytes = callNumber.getBytes();
+            System.arraycopy(callNumberBytes, 0, destCallNumber, 0, callNumberBytes.length);
+        }
 
         return ByteBufUtil.createByteBuf(getDataLength(), destCid, destCallNumber);
     }

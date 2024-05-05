@@ -7,6 +7,7 @@ import java.net.SocketAddress;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import io.github.libedi.mock.constant.MessageSubType;
@@ -44,8 +45,9 @@ public class SendRequestInboundHandlerTest {
 		assertThat(channel).isNotNull();
 	}
 	
+    @DisplayName("수신 데이터가 SEND/REQ 인 경우")
 	@Test
-	void test() {
+    void testSendRequest() {
 		// given
 		final MockMessage request = createSendRequest();
 		final MockMessage expectedSendResponse = DataConverter.convertMessage(request);
@@ -96,5 +98,35 @@ public class SendRequestInboundHandlerTest {
 				.build();
 		return MockMessage.of(header, body);
 	}
+
+    @DisplayName("수신 데이터가 SEND/REQ가 아닌 경우")
+    @Test
+    void testNotSendRequest() {
+        // given
+        final MockMessage expected = createLinkRequest();
+        channel.writeInbound(expected);
+
+        // when
+        final MockMessage actual = channel.readInbound();
+
+        // then
+        assertThat(actual).isNotNull();
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    private MockMessage createLinkRequest() {
+        final Header header = Header.builder()
+                .messageType(MessageType.REQ)
+                .messageSubType(MessageSubType.LINK)
+                .source(Address.builder()
+                        .cid(StringUtils.rightPad("123456789", 10, Character.MIN_VALUE))
+                        .build())
+                .destination(Address.builder()
+                        .cid(StringUtils.rightPad("123456789", 10, Character.MIN_VALUE))
+                        .build())
+                .reserved(new byte[10])
+                .build();
+        return MockMessage.of(header, null);
+    }
 
 }

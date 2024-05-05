@@ -25,7 +25,7 @@ public class MockMessage implements Convertible {
 
     @Override
     public int getDataLength() {
-        return header.getDataLength() + body.getDataLength();
+        return header.getDataLength() + (body == null ? 0 : body.getDataLength());
     }
 
     @Override
