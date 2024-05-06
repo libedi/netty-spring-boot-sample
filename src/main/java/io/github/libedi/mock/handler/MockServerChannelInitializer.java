@@ -36,7 +36,8 @@ public class MockServerChannelInitializer extends ChannelInitializer<SocketChann
                 .addLast(new ByteToMockMessageDecoder())
                 .addLast(new MockMessageToByteEncoder())
                 .addLast(eventExecutorGroup, new SendRequestInboundHandler())
-                .addLast(new ResultResponseInboundHandler());
+                .addLast(new ResultResponseInboundHandler())
+                .addLast(new OtherRequestInboundHandler());
     }
 
 }
